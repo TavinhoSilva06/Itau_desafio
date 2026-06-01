@@ -23,13 +23,69 @@ public class EstatisticaService {
     public EstatisticaResponse calcular() {
 
         OffsetDateTime limite = OffsetDateTime.now()
+                // Pega o horário atual
                 .minusSeconds(intervaloSegundos);
+// Subtrai a quantidade de segundos definida no application.properties
+// Exemplo:
+// intervaloSegundos = 60
+// Resultado:
+// limite = 22:29:40
+
+
 
         DoubleSummaryStatistics stats = repository.buscarTodas()
+                // Busca todas as transações salvas no repository
+
                 .stream()
+                // Transforma a lista em Stream para poder usar operações funcionais
+
                 .filter(t -> t.getDataHora().isAfter(limite))
+                /*
+                    FILTRO PRINCIPAL DA REGRA DE NEGÓCIO
+
+                    Aqui verificamos se a transação aconteceu
+                    DEPOIS do horário limite.
+
+                    Exemplo:
+
+                    limite = 22:29:40
+
+                    Transação 1:
+                    22:30:10
+                    -> isAfter(limite) = TRUE
+                    -> entra no cálculo
+
+                    Transação 2:
+                    22:28:00
+                    -> isAfter(limite) = FALSE
+                    -> ignorada
+
+                    Em resumo:
+                    Apenas transações dos últimos X segundos
+                    serão usadas nas estatísticas.
+                 */
+
                 .mapToDouble(t -> t.getValor().doubleValue())
+                /*
+                    Pega apenas o valor monetário da transação
+                    e converte para double.
+
+                    Exemplo:
+                    BigDecimal(100.50)
+                    ->
+                    100.50
+                 */
+
                 .summaryStatistics();
+        /*
+            Calcula automaticamente:
+
+            - quantidade (count)
+            - soma (sum)
+            - média (average)
+            - menor valor (min)
+            - maior valor (max)
+         */
 
         if (stats.getCount() == 0) {
             return new EstatisticaResponse(

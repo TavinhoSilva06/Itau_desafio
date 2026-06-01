@@ -29,6 +29,7 @@ public class GlobalExceptionHandler {
                 .body("Dados inválidos");
     }
 
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> tratarErroGenerico(
             Exception ex

@@ -32,6 +32,7 @@ public class TransacaoService {
     }
 
     public void limpar() {
+
         repository.limpar();
     }
 }
