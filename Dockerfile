@@ -1,14 +1,20 @@
-# Imagem base com Java 21
-FROM eclipse-temurin:21-jdk
+# Etapa de build
+FROM maven:3.9.11-eclipse-temurin-21 AS build
 
-# Diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copia o JAR gerado pelo Maven
-COPY target/*.jar app.jar
+COPY pom.xml .
+COPY src ./src
 
-# Porta utilizada pela aplicação
+RUN mvn clean package -DskipTests
+
+# Etapa de execução
+FROM eclipse-temurin:21-jre
+
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
+
 EXPOSE 8080
 
-# Comando para iniciar a aplicação
 ENTRYPOINT ["java","-jar","app.jar"]
