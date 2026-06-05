@@ -3,6 +3,7 @@ package com.example.ITAUtask.service;
 import com.example.ITAUtask.dto.EstatisticaResponse;
 import com.example.ITAUtask.repository.TransacaoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.math.RoundingMode;
 import java.time.OffsetDateTime;
 import java.util.DoubleSummaryStatistics;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EstatisticaService {
@@ -21,6 +23,13 @@ public class EstatisticaService {
     private long intervaloSegundos;
 
     public EstatisticaResponse calcular() {
+
+        // Antes de iniciar o cálculo Marca o tempo inicial de execução em milissegundos
+        long inicio = System.currentTimeMillis();
+
+        log.info(
+                "Iniciando cálculo das estatísticas"
+        );
 
         OffsetDateTime limite = OffsetDateTime.now()
                 // Pega o horário atual
@@ -86,6 +95,15 @@ public class EstatisticaService {
             - menor valor (min)
             - maior valor (max)
          */
+
+        // Marca o tempo final de execução em milissegundos
+        long fim = System.currentTimeMillis();
+
+        // Registra em um Log
+        log.info(
+                "Cálculo executado em {} ms",
+                fim - inicio
+        );
 
         if (stats.getCount() == 0) {
             return new EstatisticaResponse(

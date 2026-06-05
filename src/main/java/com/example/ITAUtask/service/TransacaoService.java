@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 
-@Slf4j // Anotação do Lombok que cria o comando 'log' automaticament
+@Slf4j // Anotação do Lombok que cria o comando 'log' automaticamente
 @Service
 @RequiredArgsConstructor
 public class TransacaoService {
@@ -26,6 +26,12 @@ public class TransacaoService {
         log.info("Agora servidor: {}", data);
 
         if (request.dataHora().isAfter(data)) {
+
+            log.warn(
+                    "Tentativa de cadastrar transação futura: {}",
+                    request.dataHora()
+            );
+
             throw new TransacaoInvalidaException(
                     "Data e hora não podem estar no futuro"
             );
@@ -37,9 +43,17 @@ public class TransacaoService {
         );
 
         repository.salvar(transacao);
+
+        log.info(
+                "Transação salva com sucesso"
+        );
     }
 
     public void limpar() {
+
+        log.info(
+                "Todas as transações foram removidas"
+        );
 
         repository.limpar();
     }
