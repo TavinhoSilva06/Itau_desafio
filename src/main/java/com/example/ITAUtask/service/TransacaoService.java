@@ -19,13 +19,13 @@ public class TransacaoService {
 
     public void registrar(TransacaoRequest request) {
 
-        // Adicionando um limite de 5 segundos a frente do horário atual por conta do servidor Render
-        OffsetDateTime agora = OffsetDateTime.now().plusSeconds(5);
+
+        OffsetDateTime data = OffsetDateTime.now();
 
         log.info("Data recebida: {}", request.dataHora());
-        log.info("Agora servidor: {}", OffsetDateTime.now());
+        log.info("Agora servidor: {}", data);
 
-        if (request.dataHora().isAfter(agora)) {
+        if (request.dataHora().isAfter(data)) {
             throw new TransacaoInvalidaException(
                     "Data e hora não podem estar no futuro"
             );
