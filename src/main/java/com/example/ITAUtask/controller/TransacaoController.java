@@ -14,7 +14,7 @@ public class TransacaoController {
 
     private final TransacaoService service;
 
-    @PostMapping
+    @PostMapping("/criar")
     public ResponseEntity<Void> criar(
             @Valid @RequestBody TransacaoRequest request
     ) {

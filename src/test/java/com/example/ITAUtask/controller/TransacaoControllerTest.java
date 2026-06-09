@@ -71,13 +71,13 @@ class TransacaoControllerTest {
         String json = """
                 {
                     "valor": 100.50,
-                    "dataHora": "2026-06-05T10:00:00-03:00"
+                    "dataHora": "2026-06-08T11:43:00-03:00"
                 }
                 """;
 
         // Simula uma requisição POST
         mockMvc.perform(
-                        post("/transacao")
+                        post("/transacao/criar")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
                 )
@@ -137,7 +137,7 @@ class TransacaoControllerTest {
 
         // Simula uma requisição POST para /transacao
         mockMvc.perform(
-                        post("/transacao")
+                        post("/transacao/criar")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(json)
                 )
