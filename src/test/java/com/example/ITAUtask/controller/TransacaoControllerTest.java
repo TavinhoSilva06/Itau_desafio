@@ -144,4 +144,30 @@ class TransacaoControllerTest {
                 // Verifica se a API respondeu com HTTP 422
                 .andExpect(status().isUnprocessableEntity());
     }
+
+    @Test
+    void deveRetornar422QuandoDataPassarDoLimite() throws Exception {
+
+        doThrow(
+                new TransacaoInvalidaException(
+                        "Esta transação já passou do limite "
+                )
+        )
+                .when(service)
+                .registrar(any());
+
+        String json = """
+        {
+            "valor": 100,
+            "dataHora": "2026-06-08T10:00:00-03:00"
+        }
+        """;
+
+        mockMvc.perform(
+                        post("/transacao/criar")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(status().isUnprocessableEntity());
+    }
 }

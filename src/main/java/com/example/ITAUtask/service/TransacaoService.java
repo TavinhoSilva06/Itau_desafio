@@ -16,6 +16,7 @@ import java.time.OffsetDateTime;
 public class TransacaoService {
 
     private final TransacaoRepository repository;
+    private final EstatisticaConfiguracaoService configuracaoService;
 
     public void registrar(TransacaoRequest request) {
 
@@ -34,6 +35,22 @@ public class TransacaoService {
 
             throw new TransacaoInvalidaException(
                     "Data e hora não podem estar no futuro"
+            );
+        }
+
+        OffsetDateTime limite = data.minusSeconds(
+                configuracaoService.buscarIntervaloSegundos()
+        );
+
+        if (request.dataHora().isBefore(limite)) {
+
+            log.warn(
+                    "Tentativa de cadastrar transacao fora do limite: {}",
+                    request.dataHora()
+            );
+
+            throw new TransacaoInvalidaException(
+                    "Esta transação já passou do limite "
             );
         }
 

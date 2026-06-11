@@ -1,9 +1,6 @@
 server:
   port: 8080
 
-estatistica:
-  intervalo-segundos: 60
-
 management:
   endpoints:
     web:

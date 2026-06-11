@@ -4,7 +4,6 @@ import com.example.ITAUtask.dto.EstatisticaResponse;
 import com.example.ITAUtask.repository.TransacaoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,9 +17,7 @@ import java.util.DoubleSummaryStatistics;
 public class EstatisticaService {
 
     private final TransacaoRepository repository;
-
-    @Value("${estatistica.intervalo-segundos}")
-    private long intervaloSegundos;
+    private final EstatisticaConfiguracaoService configuracaoService;
 
     public EstatisticaResponse calcular() {
 
@@ -33,12 +30,10 @@ public class EstatisticaService {
 
         OffsetDateTime limite = OffsetDateTime.now()
                 // Pega o horário atual
-                .minusSeconds(intervaloSegundos);
+                .minusSeconds(configuracaoService.buscarIntervaloSegundos());
 // Subtrai a quantidade de segundos definida no application.properties
 // Exemplo:
-// intervaloSegundos = 60
-// Resultado:
-// limite = 22:29:40
+// intervaloSegundos = X segundos, pois você pode alterar no properties quando quiser
 
 
 
